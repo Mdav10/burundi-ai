@@ -1,1 +1,1 @@
-web: gunicorn web_final:app
+web: gunicorn ultimate_burundi_ai:app
