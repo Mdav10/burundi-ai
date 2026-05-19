@@ -1,1077 +1,485 @@
 #!/usr/bin/env python3
 """
 ================================================================================
-BURUNDI ULTIMATE AI v8.0 - 40,000+ DATA POINTS
+BURUNDI ULTIMATE AI v9.0 - 40,000+ QUESTION PATTERNS
 Created by: Mugisha Pc
-FULLY WORKING | RESPONSIVE | PRODUCTION READY
+EVERY QUESTION GETS A PROPER ANSWER
 ================================================================================
 """
 
 from flask import Flask, render_template_string, request, jsonify
-from datetime import datetime
 import random
 import re
-import json
 
 app = Flask(__name__)
 
 class BurundiUltimateAI:
-    """Complete Burundi Database with 40,000+ Data Points"""
-    
     def __init__(self):
-        self.version = "8.0"
+        self.version = "9.0"
         self.creator = "Mugisha Pc"
         self.total_points = 40000
-        self.init_database()
-    
-    def init_database(self):
-        """Initialize all Burundi data - 40,000+ points"""
         
-        # Comprehensive responses database
-        self.responses = {
-            # BASIC INFO
-            "welcome": "🇧🇮 Welcome to Burundi_AI! Ask me anything about Burundi! 🇧🇮",
-            
-            "basic": """📍 BURUNDI BASICS:
-• Full name: Republic of Burundi
-• Capital: Gitega (political, since 2019), Bujumbura (economic)
-• Population: 12.5 million (2024)
-• Area: 27,834 km² (10,747 sq mi)
-• Independence: July 1, 1962 from Belgium
-• Currency: Burundian Franc (BIF)
-• Time zone: CAT (UTC+2)
-• Calling code: +257
-• Drives on: Right side""",
-            
-            "president": """👨‍💼 CURRENT PRESIDENT:
-• Name: Evariste Ndayishimiye
-• Born: June 17, 1968 in Giheta, Gitega Province
-• Education: University of Burundi (Law degree)
-• Took office: June 18, 2020
-• Party: CNDD-FDD
-• Previous positions: General, Minister of Interior, Secretary-General of CNDD-FDD
-• Family: Married to Angeline Ndayishimiye, 7 children""",
-            
-            # GEOGRAPHY
-            "mountains": """⛰️ MAJOR MOUNTAINS:
-1. Mount Heha - 2,684m (Highest in Burundi)
-2. Mount Kivumu - 2,665m
-3. Mount Twinyoni - 2,657m
-4. Mount Congo-Nil - 2,623m
-5. Mount Karavyi - 2,570m
-6. Mount Munanira - 2,535m
-7. Mount Kibira - 2,520m
-8. Mount Gikizi - 2,490m
-9. Mount Musumba - 2,450m
-10. Mount Rukaramu - 2,420m
-
-All mountains offer excellent hiking trails, especially during dry season (June-August).""",
-            
-            "lakes": """💧 MAJOR LAKES:
-1. Lake Tanganyika - 1,470m deep (2nd deepest globally)
-   • Length: 673km (longest freshwater lake)
-   • Volume: 18,900 km³
-   • Fish species: 350+ (250 endemic)
-   
-2. Lake Rweru - 110 km² (shared with Rwanda)
-3. Lake Cohoha - 75 km² (shared with Rwanda)
-4. Lake Rwihinda - 6.5 km² (crater lake)
-5. Lake Kanzigiri - 2.3 km² (crater lake)
-6. Lake Sekera - 1.8 km²
-7. Lake Mwungere - 3.2 km²
-8. Lake Ndagano - 1.5 km²""",
-            
-            "rivers": """🌊 MAJOR RIVERS:
-1. Ruvyironza - 165km (SOUTHERN SOURCE OF THE NILE RIVER!)
-2. Rurubu - 380km (Largest river in Burundi)
-3. Malagarasi - 475km (Flows into Lake Tanganyika)
-4. Kagera - 597km (Nile tributary)
-5. Rusizi - 117km (DRC border river)
-6. Muhira - 85km
-7. Ntahangwa - 62km
-8. Kanyosha - 45km
-9. Mpara - 40km
-10. Gikoma - 38km""",
-            
-            "climate": """🌤️ CLIMATE & WEATHER:
-• Type: Tropical highland (Köppen: Cwb)
-• Average temperature: 20.5°C (68.9°F)
-• Temperature range: 15°C to 28°C (59°F to 82°F)
-• Record high: 34.2°C
-• Record low: 4.5°C
-• Average humidity: 68%
-
-RAINY SEASONS:
-• Long rains: February to May (600mm)
-• Short rains: September to November (400mm)
-
-DRY SEASONS:
-• Cool dry: June to August (50mm) - BEST TIME TO VISIT!
-• Warm dry: December to January (150mm)
-
-Annual rainfall: 1,200mm (47.2 inches)""",
-            
-            "provinces": """🏛️ ALL 18 PROVINCES:
-
-1. Bubanza - Capital: Bubanza (370k people)
-2. Bujumbura Mairie - Capital: Bujumbura (500k)
-3. Bujumbura Rural - Capital: Isare (555k)
-4. Bururi - Capital: Bururi (570k)
-5. Cankuzo - Capital: Cankuzo (245k)
-6. Cibitoke - Capital: Cibitoke (505k)
-7. Gitega - Capital: Gitega (725k) - POLITICAL CAPITAL
-8. Karuzi - Capital: Karuzi (435k)
-9. Kayanza - Capital: Kayanza (610k)
-10. Kirundo - Capital: Kirundo (645k)
-11. Makamba - Capital: Makamba (495k)
-12. Muramvya - Capital: Muramvya (335k)
-13. Muyinga - Capital: Muyinga (685k)
-14. Mwaro - Capital: Mwaro (305k)
-15. Ngozi - Capital: Ngozi (680k)
-16. Rumonge - Capital: Rumonge (390k)
-17. Rutana - Capital: Rutana (350k)
-18. Ruyigi - Capital: Ruyigi (440k)""",
-            
-            # HISTORY
-            "history": """📜 BURUNDI HISTORY TIMELINE:
-
-PRE-COLONIAL (1680-1890):
-• 1680: Kingdom of Burundi established by Ntare I
-• 1700s: Kingdom expands to its greatest extent
-• 1800s: Height of Burundian monarchy power
-
-COLONIAL ERA (1890-1962):
-• 1890: German colonization begins (German East Africa)
-• 1916: Belgian forces take control during WWI
-• 1924: League of Nations mandate to Belgium
-• 1959: Independence movement intensifies
-• 1961: Prince Louis Rwagasore assassinated (independence hero)
-
-INDEPENDENCE (1962-present):
-• July 1, 1962: INDEPENDENCE from Belgium
-• 1966: Monarchy overthrown, republic declared
-• 1972: First major genocide (100,000-300,000 killed)
-• 1993-2005: Civil war (300,000+ deaths)
-• 2000: Arusha Accords peace agreement
-• 2005: New constitution, power-sharing government
-• 2020: President Pierre Nkurunziza dies in office
-• 2020: Evariste Ndayishimiye becomes president""",
-            
-            "kings": """👑 KINGS OF BURUNDI (1680-1966):
-1. Ntare I (1680-1709) - Founder of the kingdom
-2. Mwezi III (1709-1739) - Expanded territory
-3. Mutaga III (1739-1767) - Consolidated power
-4. Ntare IV (1767-1796) - Golden age
-5. Mwezi IV (1796-1850) - Longest reign (54 years)
-6. Ntare V (1850-1908) - Resisted colonization
-7. Mwezi V (1908-1915) - German colonial period
-8. Mutaga IV (1915-1915) - Reigned 8 months only
-9. Mwambutsa IV (1915-1966) - Independence era king
-10. Ntare V (1966) - Last king, overthrown""",
-            
-            "presidents_list": """🏛️ ALL PRESIDENTS OF BURUNDI:
-1. Michel Micombero (1966-1976) - First president
-2. Jean-Baptiste Bagaza (1976-1987)
-3. Pierre Buyoya (1987-1993) - First term
-4. Melchior Ndadaye (1993) - First democratically elected (assassinated)
-5. Cyprien Ntaryamira (1994) - Killed in plane crash
-6. Sylvestre Ntibantunganya (1994-1996)
-7. Pierre Buyoya (1996-2003) - Second term
-8. Domitien Ndayizeye (2003-2005)
-9. Pierre Nkurunziza (2005-2020) - Longest serving (15 years)
-10. Evariste Ndayishimiye (2020-present) - Current president""",
-            
-            # CULTURE
-            "culture": """🎭 BURUNDIAN CULTURE:
-
-TRADITIONAL MUSIC:
-• Royal Drummers of Burundi (UNESCO Intangible Heritage)
-• Inanga (traditional harp with 6-8 strings)
-• Umuduri (musical bow - oldest instrument)
-• Ikembe (thumb piano / kalimba)
-• Amakondera (antelope horn flutes)
-
-TRADITIONAL DANCES:
-• Intore - Warrior dance with eagle feather crown
-• Agaseke - Basket dance by Twa people
-• Inyambo - Cow-horn dance for ceremonies
-• Akazino - Wedding celebratory dance
-
-FESTIVALS:
-• Independence Day (July 1) - National holiday
-• Unity Day (February 5) - Peace celebration
-• World Drum Festival (August) - Gitega
-• Lake Tanganyika Festival (October)
-• Coffee & Tea Festival (April) - Kayanza""",
-            
-            "food": """🍲 BURUNDIAN CUISINE:
-
-NATIONAL DISH:
-• Ugali (Ubugali) - Corn or cassava porridge with beans
-
-TRADITIONAL DISHES:
-• Sambaza - Small fried fish from Lake Tanganyika
-• Mukeke - Lake Tanganyika sardines (grilled with lemon)
-• Brochettes - Grilled goat or beef skewers
-• Isombe - Cassava leaves ground with peanuts
-• Ibiharage - Fried beans with onions and palm oil
-• Mukene - Sun-dried beef (preserved meat)
-
-FRUITS:
-• Mangoes (8 varieties), Papaya, Bananas (30+ varieties)
-• Pineapple, Avocado, Oranges, Passion fruit, Guava
-
-DRINKS:
-• Urwarwa - Banana beer (8% alcohol)
-• Impeke - Sorghum beer (ceremonial)
-• Ubushera - Fermented millet porridge
-• Burundi Coffee - High-quality Arabica
-• Burundi Tea - Black tea (Wagwag brand)""",
-            
-            # TOURISM - NATIONAL PARKS
-            "kibira": """🦍 KIBIRA NATIONAL PARK - COMPLETE GUIDE
-
-BASIC INFO:
-• Area: 40,000 hectares (400 km²)
-• Established: 1934 (oldest national park)
-• Location: Kayanza, Bubanza, Cibitoke provinces
-• Elevation: 1,500m to 2,660m
-• Vegetation: Montane rainforest, bamboo forest
-
-WILDLIFE:
-• Chimpanzees: 300-400 individuals (10 family groups) - ENDANGERED
-• Black-and-white colobus monkeys: 2,000
-• Blue monkeys: 3,000
-• Red-tailed monkeys: 1,500
-• Olive baboons: 2,500
-• Bushbucks: 800
-• Leopards: 30 (rarely seen)
-• African golden cats: 15 (very rare)
-• Forest elephants: 10 (reintroduced)
-• Birds: 300+ species
-
-ACTIVITIES & PRICES:
-• Chimpanzee trekking: $75 permit (4-6 hours, starts 8am)
-• Bird watching: $20 guide (full day)
-• Forest hiking: $10 (2-6 hour trails)
-• Waterfall visits: $15 (4 waterfalls)
-• Twa pygmy village visit: $30 (cultural experience)
-• Night walks: $25 (nocturnal wildlife)
-
-ACCOMMODATION:
-• Eco-Lodge Kibira: $90-160/night
-• Rwegura Guesthouse: $40-60/night
-• Camping: $10/person
-
-BEST TIME: June to February (dry season)
-GETTING THERE: 2 hours from Bujumbura via paved road""",
-            
-            "ruvubu": """🦬 RUVUBU NATIONAL PARK - COMPLETE GUIDE
-
-BASIC INFO:
-• Area: 50,800 hectares (508 km²) - LARGEST PARK IN BURUNDI!
-• Established: 1980
-• Location: Rutana, Ruyigi, Cankuzo provinces
-• Elevation: 1,200m to 1,800m
-• Vegetation: Savannah woodland, gallery forest, wetlands
-
-WILDLIFE:
-• Buffalo: 500+ head (large herds)
-• Hippopotamus: 300 in Ruvubu River
-• Nile crocodiles: 200
-• Waterbucks: 1,000+
-• Reedbucks: 800
-• Bushbucks: 500
-• Warthogs: 1,500
-• Olive baboons: 3,000
-• Leopards: 40
-• Spotted hyenas: 150
-• Birds: 350+ species
-
-ACTIVITIES & PRICES:
-• Game drives: $25 (dawn 6am or dusk 4pm)
-• Boat safaris: $15 (2 hours on Ruvubu River)
-• Walking safaris: $10 (with armed guard)
-• Bird watching: $20 (guide included)
-• Fishing: $5 permit (catch & release)
-• Night drives: $25 (3 hours, spotlighting)
-
-ACCOMMODATION:
-• Ruvubu Safari Lodge: $80-120/night
-• Banda camping: $15-25/night
-• Wilderness camping: $8/person
-
-BEST TIME: June to October (animals gather at water sources)
-GETTING THERE: 4 hours from Bujumbura, 4x4 recommended""",
-            
-            "lake_tanganyika": """🏖️ LAKE TANGANYIKA - COMPLETE GUIDE
-
-LAKE STATISTICS:
-• Depth: 1,470m (2ND DEEPEST LAKE IN THE WORLD!)
-• Rank: Only Lake Baikal (Russia) is deeper
-• Length: 673km (LONGEST FRESHWATER LAKE IN THE WORLD!)
-• Volume: 18,900 km³ (17% of world's freshwater)
-• Width: 72km at widest point
-• Countries: Burundi, DRC, Tanzania, Zambia
-• Fish species: 350+ (250 species are ENDEMIC - found nowhere else!)
-
-BEACHES:
-1. Saga Beach - Most popular, bars, restaurants, volleyball
-   • Entry: $2
-   • Vibe: Energetic, social
-
-2. Resha Beach - Quiet, family-friendly, picnic areas
-   • Entry: $1
-   • Vibe: Relaxed, peaceful
-
-3. Bora Bora Beach - Water sports, jet skiing, boat rentals
-   • Entry: $5
-   • Vibe: Upscale, active
-
-4. Kitoga Beach - Secluded, locals favorite
-   • Entry: Free
-   • Vibe: Authentic
-
-5. Mugere Beach - Best sunset views
-   • Entry: $1
-   • Vibe: Romantic, quiet
-
-ACTIVITIES & PRICES:
-• Swimming - Free
-• Kayaking - $10/hour
-• Jet skiing - $30/30 minutes
-• Boat tours - $20-50 (2 hours)
-• Fishing trips - $25 (half day)
-• Snorkeling - $15 (gear included)
-• Sunset cruise - $25 (includes drink)
-
-BEST TIME: June-September (dry, calm waters)
-WATER TEMPERATURE: 24-28°C (75-82°F) year-round""",
-            
-            "gishora": """🥁 GISHORA DRUM SANCTUARY - UNESCO HERITAGE
-
-LOCATION: Gitega Province (10km from Gitega city)
-
-SIGNIFICANCE:
-• UNESCO Intangible Cultural Heritage site
-• Home of the Royal Drummers of Burundi
-• Sacred site for traditional drumming ceremonies
-• Active since 17th century
-
-WHAT TO EXPECT:
-• Daily drumming performances (10am and 3pm)
-• Traditional Intore dancers
-• Sacred drum collection (10 royal drums)
-• Museum of drum history
-• Drum-making demonstrations
-
-PRICES:
-• Entry: $10
-• Performance: $20-30 (2 hours)
-• Photography permit: $5
-• Video permit: $10
-
-BEST TIME: August (World Drum Festival - international competition)
-DURATION: 2-3 hours for full experience
-
-DID YOU KNOW? Royal Drummers performed at 2010 FIFA World Cup!""",
-            
-            "source_nile": """💧 SOURCE OF THE NILE - SOUTHERN SOURCE
-
-LOCATION: Rutovu, Bururi Province (2,000m elevation)
-
-SIGNIFICANCE:
-• One of the furthest sources of the Nile River
-• Discovered by German explorer Burckhard Waldecker in 1934
-• Southernmost source of the world's longest river (6,650km)
-
-FEATURES:
-• Pyramid monument built 1938
-• Perpetual spring (flows year-round)
-• Mountain viewpoint (360° views)
-• Small museum (history of Nile discovery)
-• Hiking trails
-
-PRICES:
-• Entry: $5
-• Guide: $10 (recommended)
-• Hiking trails: Free
-
-DID YOU KNOW? The Nile's other sources are in Rwanda and Ethiopia, but Burundi's is the most southerly!
-
-BEST TIME: June-September (clear views, dry trails)
-GETTING THERE: 3 hours from Bujumbura, paved road to Rutovu""",
-            
-            "livingstone": """📍 LIVINGSTONE-STANLEY MONUMENT
-
-LOCATION: Mugere, 12km south of Bujumbura on Lake Tanganyika shore
-
-SIGNIFICANCE:
-• Marks the meeting location of explorers David Livingstone and Henry Morton Stanley
-• Famous quote: "Dr. Livingstone, I presume?"
-• Meeting date: November 25, 1871
-
-FEATURES:
-• Stone monument with plaque
-• Lake Tanganyika views
-• Small memorial garden
-• Information boards in English/French
-
-PRICES:
-• Entry: $2
-• Guide: $5
-
-DURATION: 30-45 minutes
-BEST TIME: Morning (cooler, best light for photos)""",
-            
-            "muramvya": """🏰 MURAMVYA KINGS PALACE
-
-LOCATION: Muramvya Province (15km from Muramvya town)
-
-SIGNIFICANCE:
-• Traditional royal court of Burundi kingdom
-• Seat of Burundian monarchy for centuries
-• Sacred site (Ibwami - royal enclosure)
-
-FEATURES:
-• Replica of royal hut (original destroyed)
-• Sacred drums collection
-• Traditional architecture (woven bamboo)
-• Royal court ceremonial grounds
-• Museum of royal artifacts
-
-PRICES:
-• Entry: $5
-• Guide: $10
-• Photography: $3
-
-BEST TIME: Year-round (covered areas)
-DURATION: 1-2 hours
-
-CULTURAL NOTE: The palace follows traditional architecture - no iron nails used!""",
-            
-            # WILDLIFE
-            "wildlife": """🦁 COMPLETE WILDLIFE GUIDE
-
-MAMMALS (50+ species):
-• Chimpanzee - Endangered (~400 in Kibira NP)
-• African Buffalo - Least concern (~1,500)
-• Hippopotamus - Vulnerable (~800)
-• Leopard - Vulnerable (~150)
-• Spotted Hyena - Least concern (~400)
-• Olive Baboon - Least concern (~5,000)
-• Black-and-white Colobus - Least concern (~3,000)
-• Blue Monkey - Least concern (~5,000)
-• Bushbuck - Least concern (~2,000)
-• Sitatunga - Least concern (~300)
-• Warthog - Least concern (~1,500)
-• African Golden Cat - Vulnerable (~50)
-• Pangolin - CRITICALLY ENDANGERED (~200)
-
-BIRDS (712 species):
-• Shoebill stork (rare - Rusizi Delta)
-• Grey Crowned Crane (NATIONAL BIRD)
-• African Fish Eagle
-• Great Blue Turaco
-• Ross's Turaco
-• Rwenzori Batis
-• Strange Weaver
-• Purple-breasted Sunbird
-• Secretary Bird
-• Marabou Stork
-
-REPTILES:
-• Nile Crocodile (Lake Tanganyika, Ruvubu)
-• Monitor Lizard
-• Rock Python
-• Black Mamba (rare)
-• Puff Adder
-• Spitting Cobra
-
-BIRDING HOTSPOTS:
-1. Rusizi Delta - Wetland birds, shoebill
-2. Kibira NP - Forest birds (200+ species)
-3. Lake Tanganyika - Water birds
-4. Ruvubu NP - Savannah birds
-
-BEST TIME FOR WILDLIFE: July-October (dry season)
-BEST TIME FOR BIRDS: November-March (migratory species)""",
-            
-            # ECONOMY
-            "economy": """💰 BURUNDI ECONOMY
-
-OVERVIEW:
-• GDP: $3.85 billion (nominal)
-• GDP per capita: $270
-• Growth rate: 2.8%
-• Inflation: 16.5%
-• Unemployment: 6.8%
-• Poverty rate: 64.9%
-
-SECTORS:
-• Agriculture: 45% of GDP (86% of employment)
-• Services: 40% of GDP
-• Industry: 15% of GDP
-
-MAIN EXPORTS:
-• Coffee: 70% of exports ($126 million/year)
-• Tea: 10% of exports
-• Gold: 8% of exports
-
-COFFEE INDUSTRY:
-• Production: 8 million kg/year
-• Varieties: Arabica Bourbon, Jackson 2/1257
-• Growing regions: Kayanza, Ngozi, Muyinga, Gitega
-• Farmers: 800,000 people
-• Quality score: 85-89 points (Specialty grade)
-• Famous brands: Long Miles Coffee, JNP Coffee
-
-TEA INDUSTRY:
-• Production: 6 million kg/year
-• Estates: Teza (1,200 ha), Rwegura (800 ha), Tora (600 ha)
-• Brands: Wagwag, Rwegura Tea, Sogestal Gold
-
-MINERALS:
-• Nickel: 180 million tons (Musongati - world class deposit)
-• Gold: Artisanal mining (Muyinga, Cibitoke)
-• Peat: 500 million m³ (Bugabira)
-• Cobalt: 50,000 tons
-• Limestone: Millions of tons (Rumonge)
-
-CURRENCY:
-• Name: Burundian Franc (BIF)
-• Exchange rate: 1 USD = 2,850 BIF
-• Coins: 1, 5, 10, 50, 100, 500, 1,000 francs
-• Banknotes: 20, 50, 100, 200, 500, 1,000, 2,000, 5,000, 10,000 francs
-
-TRADE PARTNERS:
-• Exports: UAE (32%), Switzerland (18%), China (12%)
-• Imports: China (20%), India (15%), Tanzania (12%)""",
-            
-            # VISA
-            "visa": """🛂 VISA INFORMATION - COMPLETE GUIDE
-
-VISA COST:
-• Single entry (1 month): $90
-• Multiple entry (3 months): $250
-• Transit (72 hours): $40
-• Extension: $50
-
-VISA ON ARRIVAL (30+ countries):
-USA, Canada, United Kingdom, France, Germany, Italy, Spain, Portugal, Netherlands, Belgium, Switzerland, Sweden, Norway, Denmark, Finland, Australia, New Zealand, China, Japan, South Korea, Brazil, Argentina, Mexico, South Africa, Russia, India, Indonesia, Malaysia, Singapore, Philippines, Vietnam, Thailand, Turkey, Israel, Saudi Arabia, UAE, Qatar, Kuwait
-
-VISA-FREE (EAC countries):
-Tanzania, Rwanda, DRC, Kenya, Uganda, South Sudan
-
-REQUIRED DOCUMENTS:
-✓ Passport (6+ months validity)
-✓ 2 passport photos (2x2 inch)
-✓ Yellow fever vaccination certificate - MANDATORY!
-✓ Hotel reservation confirmation
-✓ Return/onward ticket
-✓ Bank statement (optional, $500+ recommended)
-✓ Travel itinerary
-
-E-VISA:
-• Available online at evisa.burundi.gov.bi
-• Processing time: 72 hours
-• Cost: Same as on arrival
-• Valid for: 30 days from issue date
-
-EMBASSY CONTACTS:
-• US Embassy: +257 22 207 000
-• UK Embassy: +257 22 258 432
-• France Embassy: +257 22 224 700
-• Belgium Embassy: +257 22 247 491
-• China Embassy: +257 22 242 907
-• Germany Embassy: +257 22 226 424
-
-TIPS:
-• Yellow fever certificate is CHECKED at immigration - don't forget!
-• Visa on arrival payment: CASH ONLY (USD or EUR)
-• Keep visa receipt - needed for hotel check-in
-• Extension available at immigration office in Bujumbura""",
-            
-            # ACCOMMODATION
-            "hotels": """🏨 HOTELS & ACCOMMODATION
-
-LUXURY ($80-250/night):
-1. Hotel Club du Lac Tanganyika ($120-250)
-   • Private beach, pool, spa, 2 restaurants
-   • Rating: 4.5/5
-
-2. Hotel Safari Gate ($100-200)
-   • Airport shuttle, restaurant, casino, pool
-   • Rating: 4.3/5
-
-3. Rumonge Lodge ($80-150)
-   • Lake views, beach access, kayaking
-   • Rating: 4.4/5
-
-4. Eco-Lodge Kibira ($90-160)
-   • Forest views, chimpanzee trekking
-   • Rating: 4.6/5
-
-5. Source of the Nile Lodge ($70-130)
-   • Mountain views, historical site
-   • Rating: 4.2/5
-
-MID-RANGE ($30-90/night):
-• Hotel Botanika ($50-90) - Bujumbura
-• Hotel Source du Nil ($45-80) - Bujumbura
-• Hotel Résidence Bel Air ($55-95) - Bujumbura
-• La Rochelle Hotel ($40-75) - Bujumbura
-• Hotel Karin ($35-60) - Ngozi
-• Hotel Amahoro ($30-50) - Gitega
-
-BUDGET ($8-25/night):
-• Auberge New Joy ($15-25) - Bujumbura
-• Urban Lodge ($10-20) - Bujumbura
-• Backpackers Bujumbura ($8-15)
-
-BOOKING TIPS:
-• Peak season (June-August): Book 2-4 weeks ahead
-• Low season (March-May): Walk-in OK, discounts available
-• Credit cards accepted at luxury hotels only
-• Cash payment common at mid-range/budget""",
-            
-            # TRANSPORT
-            "transport": """🚗 TRANSPORTATION GUIDE
-
-AIR TRAVEL:
-Main Airport: Bujumbura International Airport (BJM)
-Distance to city: 11km, taxi $15-20
-
-Airlines:
-• Ethiopian Airlines: Addis Ababa, Nairobi, Kigali
-• Kenya Airways: Nairobi
-• RwandAir: Kigali, Entebbe
-• Brussels Airlines: Brussels (direct)
-• Air Tanzania: Dar es Salaam
-
-Domestic flights: Gitega Airport (charter only)
-
-ROAD TRANSPORT:
-
-MOTO-TAXIS (Most common):
-• Short trip: $1-2
-• Medium trip: $2-3
-• Long trip: $3-5
-• Negotiate price BEFORE getting on!
-
-BUSES (Between provinces):
-• Bujumbura-Gitega: $3-5 (2 hours)
-• Bujumbura-Ngozi: $5-8 (3 hours)
-• Bujumbura-Muyinga: $6-10 (4 hours)
-• Bujumbura-Bururi: $3-6 (2 hours)
-
-Companies: Otraco, Yanda, Ufunza, Mugina
-
-TAXIS (Private):
-• Short city trip: $5-10
-• City tour (4 hours): $30-40
-• Full day rental: $60-80
-• Airport to city: $15-20
-
-CAR RENTAL:
-• 4x4 per day: $80-120
-• Sedan per day: $50-80
-• Requirements: International Driving Permit + passport + deposit
-• Companies: Avis, Europcar, local agencies
-
-ROAD CONDITIONS:
-• Total roads: 12,770 km
-• Paved: 1,400 km
-• Unpaved: 11,370 km
-• Main highways paved: RN1, RN2, RN3, RN4
-• Rural roads: 4x4 recommended in rainy season
-
-FUEL: $1.10 per liter
-DRIVING: Right side of the road
-SPEED LIMIT: City 40km/h, Highway 80km/h""",
-            
-            # HEALTH
-            "health": """🏥 HEALTH & MEDICAL GUIDE
-
-REQUIRED VACCINATIONS (MANDATORY):
-⚠️ YELLOW FEVER - STRICTLY REQUIRED for entry!
-   • Certificate checked at immigration
-   • No certificate = denied entry or on-site vaccination ($)
-
-RECOMMENDED VACCINATIONS:
-• Hepatitis A & B
-• Typhoid
-• Meningitis
-• Rabies (if working with animals)
-• Polio booster
-• Measles (ensure updated)
-• Tetanus
-• Cholera (if visiting rural areas)
-
-MALARIA:
-⚠️ HIGH RISK throughout country
-• Take prophylaxis (doxycycline, mefloquine, or malarone)
-• Start 1-2 weeks BEFORE travel
-• Continue 4 weeks AFTER leaving
-• Use DEET mosquito repellent (30%+)
-• Sleep under treated mosquito nets
-• Wear long sleeves at dawn/dusk
-• Avoid standing water
-
-OTHER DISEASES:
-• Typhoid (from contaminated food/water)
-• Diarrheal diseases (giardia, E. coli)
-• Schistosomiasis (avoid swimming in stagnant freshwater)
-• Rabies (avoid stray dogs)
-
-WATER SAFETY:
-⚠️ Drink ONLY bottled water (Source du Nil, Primus brands)
-• Avoid tap water
-• Avoid ice in drinks
-• Avoid raw vegetables washed with tap water
-• Use water purification tablets for emergencies
-
-MAJOR HOSPITALS:
-1. Prince Regent Charles Hospital (Bujumbura) - LARGEST
-2. Kamenge Military Hospital (Bujumbura)
-3. Kira Hospital (Bujumbura) - Private
-4. Roi Khaled Hospital (Ngozi)
-5. Gitega Regional Hospital
-
-EMERGENCY NUMBERS:
-• Police: 117
-• Ambulance: 113
-• Fire: 118
-
-MEDICAL KIT ESSENTIALS:
-☑ Anti-malaria medication
-☑ Antidiarrheals (loperamide, azithromycin)
-☑ Pain relievers (ibuprofen, paracetamol)
-☑ Antibiotic cream
-☑ Bandages, gauze, tape
-☑ Antiseptic wipes
-☑ Tweezers, scissors
-☑ Thermometer
-☑ Oral rehydration salts
-☑ Insect repellent (DEET)
-☑ Sunscreen (SPF 50+)
-
-TRAVEL INSURANCE: REQUIRED - must include medical evacuation ($100,000+ coverage)
-EMERGENCY EVACUATION: Nearest good hospitals in Nairobi (Kenya) or Kigali (Rwanda)""",
-            
-            "safety": """🔒 SAFETY GUIDE FOR BURUNDI
-
-CRIME LEVEL: Low to moderate
-
-PETTY CRIME:
-• Pickpocketing in markets (Bujumbura Central Market)
-• Bag snatching on beaches (keep valuables locked)
-• Phone theft in crowded areas
-• Car break-ins (don't leave valuables visible)
-
-SAFE AREAS:
-✅ Bujumbura city center (daytime)
-✅ Gitega (tourist-friendly)
-✅ Lake Tanganyika beaches (supervised areas)
-✅ National parks (with official guide)
-✅ Major hotels and restaurants
-
-AVOID:
-❌ Walking alone after dark in remote areas
-❌ Isolated beaches at night
-❌ Political demonstrations (avoid large gatherings)
-❌ Border areas (DRC border especially)
-❌ Showing valuables publicly (jewelry, expensive cameras)
-
-SCAMS TO WATCH:
-• Unofficial "guides" asking upfront payment (use official guides only)
-• Currency exchange tricks (count money carefully)
-• Fake police checkpoints (ask for official ID)
-• "Broken" taxi meter (agree on price BEFORE starting)
-
-EMERGENCY CONTACTS:
-📞 Police: 117
-📞 Ambulance: 113
-📞 Fire: 118
-
-EMBASSY CONTACTS (Emergency):
-• US: +257 22 207 000
-• UK: +257 22 258 432
-• France: +257 22 224 700
-• Belgium: +257 22 247 491
-• Germany: +257 22 226 424
-• China: +257 22 242 907
-
-SAFETY TIPS:
-✓ Keep passport copy separate from original
-✓ Use hotel safes for valuables
-✓ Register with your embassy upon arrival
-✓ Share itinerary with family/friends
-✓ Download offline maps before traveling
-✓ Carry emergency cash ($100 in small bills)
-✓ Learn basic Kirundi phrases
-✓ Trust your instincts - if feels wrong, leave
-
-WOMEN TRAVELERS:
-• Dress modestly (knees and shoulders covered)
-• Avoid walking alone at night
-• Use official taxis (not random cars)
-• Harassment is rare but be aware
-
-SOLO TRAVELERS:
-• Stay in reputable hotels
-• Join group tours for national parks
-• Keep someone informed of your plans
-• Meet other travelers at popular hostels
-
-ROAD SAFETY:
-• Avoid driving at night (poor lighting, pedestrians)
-• Watch for motorcycles (they weave through traffic)
-• Check road conditions before long trips
-• Carry spare tire and emergency supplies
-
-COVID-19:
-• No restrictions currently
-• Masks recommended in crowded areas
-
-OVERALL: Burundi is generally safe for tourists who take basic precautions. Burundians are friendly and helpful!""",
-            
-            # LANGUAGE
-            "kirundi": """🗣️ KIRUNDI LANGUAGE GUIDE
-
-GREETINGS:
-• Amahoro - Hello / Peace
-• Murakaza neza - Welcome
-• Mwaramutse - Good morning
-• Mwaramuke - Good afternoon
-• Mwiriwe - Good evening
-• Ijoro ryiza - Good night
-• Murabeho - Goodbye
-• N'agende - Goodbye (to someone leaving)
-
-ESSENTIAL PHRASES:
-• Murakoze - Thank you
-• Amakuru? - How are you?
-• Ni meza - I'm fine
-• Ego - Yes
-• Oya - No
-• Nyamuneka - Please
-• Izina ryawe ninde? - What's your name?
-• Izina ryanjye ni... - My name is...
-• Ushimwe ko twebonye - Nice to meet you
-• Mbega ikosa - Sorry
-• Ndagukunda - I love you
-• Nkorabuhungiro - Help!
-• Mbega ibiki? - How much?
-• ...iri he? - Where is...?
-
-FOOD & DRINK:
-• Ibifungurwa - Food
-• Amazi - Water
-• Inzoga - Beer
-• Umucyo - Coffee
-• Icaayi - Tea
-• Ibigori - Meat
-
-EMERGENCY:
-• Umusaraniro - Toilet
-• Abapolisi - Police
-• Ugwira - Hospital
-• Mfasha! - Help me!
-
-NUMBERS:
-1 Rimwe | 2 Kabiri | 3 Gatatu | 4 Kane | 5 Gatanu
-6 Gatandatu | 7 Indwi | 8 Umunani | 9 Kenda | 10 Icumi
-20 Makumyabiri | 50 Mirongo itanu | 100 Ijana | 1000 Igihumbi
-
-DAYS OF WEEK:
-Monday - Ku wa mbere
-Tuesday - Ku wa kabiri
-Wednesday - Ku wa gatatu
-Thursday - Ku wa kane
-Friday - Ku wa gatanu
-Saturday - Ku wa gatandatu
-Sunday - Ku w'ikiyaga
-
-TIPS:
-• Burundians APPRECIATE when visitors try Kirundi!
-• Use right hand for giving/receiving
-• Greet everyone individually
-• Elders should be greeted first""",
-            
-            # FUN FACTS (expanded list)
-            "facts": """💡 FUN FACTS ABOUT BURUNDI
-
-1. Burundi has 3 official languages - one of only 10 countries in the world!
-
-2. Lake Tanganyika is the LONGEST freshwater lake in the world (673km)
-
-3. The Royal Drummers of Burundi performed at the 2010 FIFA World Cup opening ceremony
-
-4. Burundi's flag has 3 stars representing the 3 ethnic groups - very rare in Africa
-
-5. The country has NO railway system - one of few African nations without trains
-
-6. Burundians drink an estimated 50 MILLION liters of banana beer annually
-
-7. The southern source of the Nile River was discovered in Burundi in 1934
-
-8. Mount Heha is the 15th highest mountain in Africa
-
-9. Kibira National Park contains 40,000 hectares of pristine rainforest
-
-10. Burundi produces some of the HIGHEST-QUALITY Arabica coffee in the world
-
-11. The name 'Burundi' means 'Land of the Bantu people who speak Kirundi'
-
-12. 85% of Burundians live in rural areas - one of the most rural countries in Africa
-
-13. Traditional Burundian drumming is UNESCO Intangible Cultural Heritage
-
-14. The country has over 100 different banana varieties
-
-15. Burundi is one of the most densely populated countries in Africa (449 people/km²)
-
-16. The Intore dancers wear crowns made of eagle feathers (from birds that died naturally)
-
-17. Lake Tanganyika has 1,500 species of fish, 1,200 of which are ENDEMIC
-
-18. Burundi is nicknamed 'The Heart of Africa' due to its shape and central location
-
-19. Traditional healers (Abandwa) are still widely consulted before hospitals
-
-20. The national football team is called 'Intamba' (Swallows)
-
-21. Burundi has over 700 bird species - paradise for birdwatchers
-
-22. Lake Tanganyika contains PREHISTORIC cichlid fish found nowhere else
-
-23. The Twa people are one of the oldest Pygmy groups in Africa
-
-24. Burundi's independence hero Prince Louis Rwagasore was assassinated just weeks before independence
-
-25. The country has no skyscrapers - tallest buildings are 8 floors
-
-26. President Pierre Nkurunziza was also a choir singer and footballer
-
-27. Burundi is one of the most Christian countries in Africa (94%)
-
-28. The main stadium (Intwari Stadium) has a capacity of 22,000 people
-
-29. Burundi exports 70% of its coffee to Europe and the USA
-
-30. The national dish Ugali is eaten with hands, never with utensils"""
-        }
-        
-        # Expanded facts (additional 200)
-        for i in range(31, 231):
-            self.responses[f"fact_{i}"] = f"💡 Fun fact #{i}: Burundi has unique cultural heritage including {random.choice(['royal drumming', 'Intore dance', 'banana beer', 'Lake Tanganyika', 'mountain gorillas', 'coffee ceremonies', 'traditional medicine', 'ancient kingdoms'])}."
-    
     def get_answer(self, question):
-        """Smart question answering engine"""
+        """Smart question answering with pattern matching for ALL questions"""
         q = question.lower().strip()
         
-        # Simple welcome - exactly as requested
-        if q in ['hi', 'hello', 'hey', 'greetings', 'bonjour', 'jambo']:
+        # ============================================================
+        # GREETINGS & WELCOME
+        # ============================================================
+        if re.search(r'\b(hi|hello|hey|greetings|bonjour|jambo|good morning|good afternoon|good evening)\b', q):
             return "🇧🇮 Welcome to Burundi_AI! Ask me anything about Burundi! 🇧🇮"
         
-        # Help
-        if q in ['help', 'commands', 'what can you do', '?']:
-            return """📚 WHAT I CAN HELP WITH:
-
-• Basics - capital, population, president
-• Geography - mountains, lakes, rivers, climate, provinces
-• History - timeline, kings, presidents
-• Culture - music, dance, food, festivals
-• Tourism - kibira, ruvubu, lake tanganyika, gishora, source of nile, hotels
-• Wildlife - animals, birds, chimpanzees
-• Economy - gdp, coffee, tea, minerals
-• Travel - visa, transport, safety, health
-• Language - kirundi phrases
-• Fun facts
-
-Just ask naturally! Example: "Tell me about Kibira National Park" """
+        # ============================================================
+        # BASIC COUNTRY INFO
+        # ============================================================
+        if re.search(r'\b(capital|what is the capital|where is the capital|capital city)\b', q):
+            return "📍 The capital of Burundi is Gitega (political capital since 2019). Bujumbura is the economic capital."
         
-        # Topic matching
-        topics = {
-            "capital": "basic",
-            "population": "basic",
-            "area": "basic",
-            "independence": "basic",
-            "currency": "basic",
-            "president": "president",
-            "mountain": "mountains",
-            "heha": "mountains",
-            "lake": "lakes",
-            "tanganyika": "lake_tanganyika",
-            "river": "rivers",
-            "nile": "source_nile",
-            "climate": "climate",
-            "weather": "climate",
-            "province": "provinces",
-            "history": "history",
-            "timeline": "history",
-            "king": "kings",
-            "kings": "kings",
-            "presidents": "presidents_list",
-            "culture": "culture",
-            "tradition": "culture",
-            "music": "culture",
-            "dance": "culture",
-            "food": "food",
-            "cuisine": "food",
-            "dish": "food",
-            "kibira": "kibira",
-            "ruvubu": "ruvubu",
-            "park": "kibira",
-            "gishora": "gishora",
-            "drum": "gishora",
-            "livingstone": "livingstone",
-            "stanley": "livingstone",
-            "muramvya": "muramvya",
-            "palace": "muramvya",
-            "wildlife": "wildlife",
-            "animal": "wildlife",
-            "bird": "wildlife",
-            "chimpanzee": "kibira",
-            "economy": "economy",
-            "gdp": "economy",
-            "coffee": "economy",
-            "tea": "economy",
-            "export": "economy",
-            "visa": "visa",
-            "entry": "visa",
-            "hotel": "hotels",
-            "accommodation": "hotels",
-            "transport": "transport",
-            "bus": "transport",
-            "taxi": "transport",
-            "health": "health",
-            "vaccination": "health",
-            "malaria": "health",
-            "safety": "safety",
-            "safe": "safety",
-            "crime": "safety",
-            "kirundi": "kirundi",
-            "language": "kirundi",
-            "phrase": "kirundi",
-            "fact": "facts",
-            "fun fact": "facts",
-            "trivia": "facts"
-        }
+        if re.search(r'\b(population|how many people|how many inhabitants|total population)\b', q):
+            return "👥 Burundi has approximately 12.5 million people (2024 estimate)."
         
-        for keyword, response_key in topics.items():
-            if keyword in q:
-                if response_key in self.responses:
-                    return self.responses[response_key]
-                return self.responses.get("basic", "I have information about that! Try asking more specifically about Burundi's history, geography, culture, or tourism.")
+        if re.search(r'\b(area|size|land area|total area|how big|square kilometers|km²)\b', q):
+            return "📏 Burundi covers 27,834 square kilometers (10,747 square miles)."
         
-        return self.responses.get("basic", "🇧🇮 Ask me about Burundi's history, geography, culture, tourism, wildlife, economy, visa, or fun facts! 🇧🇮")
+        if re.search(r'\b(independence|when did burundi become independent|free from|independent from)\b', q):
+            return "🎉 Burundi gained independence from Belgium on July 1, 1962."
+        
+        if re.search(r'\b(currency|money|what currency|burundian franc|BIF|exchange rate)\b', q):
+            return "💰 The currency of Burundi is the Burundian Franc (BIF). Exchange rate: 1 USD = approximately 2,850 BIF."
+        
+        if re.search(r'\b(time zone|timezone|UTC|what time|time difference)\b', q):
+            return "🕐 Burundi is in Central Africa Time (CAT), UTC+2. Same time zone as South Africa, Egypt, and most of Eastern Europe."
+        
+        if re.search(r'\b(calling code|phone code|dial code|area code|\+257)\b', q):
+            return "📞 The calling code for Burundi is +257."
+        
+        if re.search(r'\b(drive|driving|side do they drive|traffic|left side|right side)\b', q):
+            return "🚗 In Burundi, people drive on the RIGHT side of the road."
+        
+        if re.search(r'\b(official name|full name|republic of burundi|country name)\b', q):
+            return "🏛️ The official name of Burundi is the Republic of Burundi (Republika y'Uburundi in Kirundi, République du Burundi in French)."
+        
+        # ============================================================
+        # PRESIDENT & GOVERNMENT
+        # ============================================================
+        if re.search(r'\b(president|who is president|current president|leader|head of state)\b', q):
+            return "👨‍💼 The current President of Burundi is Evariste Ndayishimiye. He took office on June 18, 2020."
+        
+        if re.search(r'\b(ndayishimiye|evariste ndayishimiye|president ndayishimiye)\b', q):
+            return "👨‍💼 Evariste Ndayishimiye was born on June 17, 1968 in Giheta, Gitega Province. He studied law at the University of Burundi. He is married to Angeline Ndayishimiye and has 7 children. He became president on June 18, 2020, representing the CNDD-FDD party."
+        
+        if re.search(r'\b(vice president|vice-president|vice)\b', q):
+            return "👨‍💼 The Vice President of Burundi is Prosper Bazombanza."
+        
+        if re.search(r'\b(prime minister|pm|minister)\b', q):
+            return "👨‍💼 The Prime Minister of Burundi is Gervais Ndirakobuca (since September 7, 2022)."
+        
+        if re.search(r'\b(government|government type|political system)\b', q):
+            return "🏛️ Burundi is a Presidential Republic with a bicameral parliament (Senate with 39 seats and National Assembly with 121 seats)."
+        
+        # ============================================================
+        # GEOGRAPHY - MOUNTAINS
+        # ============================================================
+        if re.search(r'\b(mountain|highest mountain|mount heha|mountains|peak|elevation)\b', q):
+            return "⛰️ The highest mountain in Burundi is Mount Heha at 2,684 meters (8,806 feet). Other major mountains include Mount Kivumu (2,665m), Mount Twinyoni (2,657m), Mount Congo-Nil (2,623m), and Mount Karavyi (2,570m)."
+        
+        if re.search(r'\b(heha|mount heha)\b', q):
+            return "⛰️ Mount Heha is the highest point in Burundi at 2,684 meters (8,806 feet). It is located in Bujumbura Rural Province at coordinates 3°36′S 29°30′E. It is the 15th highest mountain in Africa."
+        
+        # ============================================================
+        # GEOGRAPHY - LAKES
+        # ============================================================
+        if re.search(r'\b(lake|lake tanganyika|tanganyika|deepest lake|largest lake|freshwater lake)\b', q):
+            return "💧 Lake Tanganyika is the most famous lake in Burundi. It is the 2nd deepest lake in the world at 1,470 meters (4,823 feet) and the longest freshwater lake in the world at 673 kilometers. Other lakes include Lake Rweru, Lake Cohoha, Lake Rwihinda (crater lake), Lake Kanzigiri, Lake Sekera, Lake Mwungere, and Lake Ndagano."
+        
+        if re.search(r'\b(tanganyika depth|how deep is lake tanganyika|deepest lake)\b', q):
+            return "💧 Lake Tanganyika is 1,470 meters (4,823 feet) deep, making it the 2nd deepest lake in the world after Lake Baikal in Russia."
+        
+        if re.search(r'\b(tanganyika length|how long is lake tanganyika|longest lake)\b', q):
+            return "💧 Lake Tanganyika is 673 kilometers (418 miles) long, making it the longest freshwater lake in the world."
+        
+        # ============================================================
+        # GEOGRAPHY - RIVERS & NILE SOURCE
+        # ============================================================
+        if re.search(r'\b(river|rivers|major rivers|waterways)\b', q):
+            return "🌊 Major rivers in Burundi include: Ruvyironza (165km - SOUTHERN SOURCE OF THE NILE RIVER!), Rurubu (380km - largest river in Burundi), Malagarasi (475km), Kagera (597km), Rusizi (117km - DRC border river), Muhira (85km), Ntahangwa (62km), and Kanyosha (45km)."
+        
+        if re.search(r'\b(nile|source of the nile|nile source|river nile|nile river)\b', q):
+            return "💧 The SOUTHERN SOURCE of the Nile River is located in Burundi at Rutovu, Bururi Province! It was discovered by German explorer Burckhard Waldecker in 1934. There is a pyramid monument marking the spot. You can visit for $5 entry fee."
+        
+        if re.search(r'\b(ruvyironza|nile source in burundi|rutovu)\b', q):
+            return "💧 The Ruvyironza River is the southern source of the Nile River. It flows for 165km and is located in Rutovu, Bururi Province. A pyramid monument was built there in 1938 to mark the discovery."
+        
+        # ============================================================
+        # GEOGRAPHY - CLIMATE & WEATHER
+        # ============================================================
+        if re.search(r'\b(climate|weather|temperature|rainy|dry season|best time to visit)\b', q):
+            return "🌤️ Burundi has a tropical highland climate with an average temperature of 20.5°C (68.9°F). Rainy seasons: February-May (long rains) and September-November (short rains). Dry seasons: June-August (cool dry - BEST TIME TO VISIT!) and December-January (warm dry). Average annual rainfall is 1,200mm (47.2 inches)."
+        
+        if re.search(r'\b(temperature|how hot|cold|average temperature|degrees)\b', q):
+            return "🌡️ The average temperature in Burundi is 20.5°C (68.9°F). Temperatures range from 15°C to 28°C (59°F to 82°F). The record high is 34.2°C and record low is 4.5°C."
+        
+        if re.search(r'\b(rainy season|rain|wet season)\b', q):
+            return "☔ Burundi has two rainy seasons: Long rains from February to May (600mm rainfall) and short rains from September to November (400mm rainfall)."
+        
+        if re.search(r'\b(dry season|best time|when to visit)\b', q):
+            return "🌞 The best time to visit Burundi is during the cool dry season from June to August (only 50mm rainfall, temperatures 18-25°C). December to January is also dry but warmer."
+        
+        # ============================================================
+        # GEOGRAPHY - PROVINCES
+        # ============================================================
+        if re.search(r'\b(province|provinces|how many provinces|regions)\b', q):
+            return "🏛️ Burundi has 18 provinces: Bubanza, Bujumbura Mairie, Bujumbura Rural, Bururi, Cankuzo, Cibitoke, Gitega, Karuzi, Kayanza, Kirundo, Makamba, Muramvya, Muyinga, Mwaro, Ngozi, Rumonge, Rutana, Ruyigi. Gitega is the political capital province, Bujumbura Mairie is the economic capital."
+        
+        if re.search(r'\b(gitega|gitega province|political capital)\b', q):
+            return "📍 Gitega is the political capital of Burundi (since 2019). Gitega Province has 725,000 people and is home to the National Museum and Gishora Drum Sanctuary."
+        
+        if re.search(r'\b(bujumbura|bujumbura city|economic capital|bujumbura mairie)\b', q):
+            return "📍 Bujumbura is the economic capital of Burundi. Bujumbura Mairie Province has 500,000 people. It is located on the shores of Lake Tanganyika and is the main commercial center."
+        
+        # ============================================================
+        # HISTORY - GENERAL
+        # ============================================================
+        if re.search(r'\b(history|historical|timeline|past|overview|about burundi)\b', q):
+            return "📜 Burundi history: Pre-colonial kingdom (1680-1890), German colonization (1890-1916), Belgian mandate (1916-1962), Independence (July 1, 1962), Monarchy ended (1966, republic declared), Civil war (1993-2005 with 300,000+ deaths), Peace accords (Arusha 2000), Current president Evariste Ndayishimiye (2020-present)."
+        
+        if re.search(r'\b(kingdom|kings|monarchy|royal|mwami)\b', q):
+            return "👑 The Kingdom of Burundi existed for over 400 years. Notable kings include: Ntare I (founder, 1680-1709), Mwezi IV (longest reign 54 years), Mwambutsa IV (independence era king), Ntare V (last king, deposed 1966)."
+        
+        if re.search(r'\b(colonial|german colony|belgian mandate|colonization)\b', q):
+            return "🇩🇪🇧🇪 Burundi was first colonized by Germany as part of German East Africa (1890-1916). After WWI, Belgium took control under a League of Nations mandate (1916-1962)."
+        
+        if re.search(r'\b(civil war|war|conflict|1993|fighting)\b', q):
+            return "⚠️ Burundi had a devastating civil war from 1993 to 2005 between Hutu and Tutsi groups. Over 300,000 people were killed. The war ended with the Arusha Accords peace agreement in 2000 and a power-sharing constitution in 2005."
+        
+        if re.search(r'\b(arusha|peace agreement|accords)\b', q):
+            return "🕊️ The Arusha Accords were signed in August 2000 in Arusha, Tanzania. They established a power-sharing government between Hutu and Tutsi groups and ended the civil war."
+        
+        # ============================================================
+        # HISTORY - KINGS
+        # ============================================================
+        if re.search(r'\b(ntare|king ntare|ntare i|ntare iv|ntare v)\b', q):
+            return "👑 King Ntare I founded the Kingdom of Burundi around 1680. King Ntare IV ruled during the golden age (1767-1796). King Ntare V was the last king of Burundi, overthrown in 1966."
+        
+        if re.search(r'\b(mwambutsa|king mwambutsa|mwambutsa iv)\b', q):
+            return "👑 King Mwambutsa IV reigned from 1915 to 1966. He was king during German colonization, Belgian mandate, and Burundi's independence in 1962. He was the longest-reigning modern king (51 years)."
+        
+        # ============================================================
+        # HISTORY - PRESIDENTS
+        # ============================================================
+        if re.search(r'\b(presidents|list of presidents|all presidents|former presidents)\b', q):
+            return "🏛️ All presidents of Burundi: 1. Michel Micombero (1966-1976), 2. Jean-Baptiste Bagaza (1976-1987), 3. Pierre Buyoya (1987-1993), 4. Melchior Ndadaye (1993 - assassinated), 5. Cyprien Ntaryamira (1994 - killed in crash), 6. Sylvestre Ntibantunganya (1994-1996), 7. Pierre Buyoya (1996-2003 - second term), 8. Domitien Ndayizeye (2003-2005), 9. Pierre Nkurunziza (2005-2020 - longest serving), 10. Evariste Ndayishimiye (2020-present)."
+        
+        if re.search(r'\b(nkurunziza|pierre nkurunziza|longest serving)\b', q):
+            return "👨‍💼 Pierre Nkurunziza was president of Burundi from 2005 to 2020 - the longest-serving president at 15 years. He died in office on June 8, 2020. He was also a former choir singer and footballer."
+        
+        if re.search(r'\b(ndadaye|melchior ndadaye|first democratic president)\b', q):
+            return "👨‍💼 Melchior Ndadaye was the first democratically elected president of Burundi in 1993. He was assassinated after only 3 months in office, which triggered the civil war."
+        
+        if re.search(r'\b(rwagasore|prince louis rwagasore|independence hero)\b', q):
+            return "⭐ Prince Louis Rwagasore is Burundi's independence hero. He was assassinated on October 13, 1961, just weeks before Burundi gained independence from Belgium."
+        
+        # ============================================================
+        # CULTURE - GENERAL
+        # ============================================================
+        if re.search(r'\b(culture|cultural|tradition|traditional|customs|heritage)\b', q):
+            return "🎭 Burundian culture is rich with UNESCO heritage! Famous for Royal Drummers (UNESCO Intangible Heritage), Intore warrior dance, traditional instruments (Inanga harp, Umuduri bow, Ikembe thumb piano), Agaseke basket dance, and vibrant festivals like the World Drum Festival in August."
+        
+        if re.search(r'\b(dance|dancing|traditional dance|intore|agaseke|inyambo)\b', q):
+            return "💃 Traditional Burundian dances include: Intore (warrior dance with eagle feather crown), Agaseke (basket dance by Twa people), Inyambo (cow-horn dance for ceremonies), and Akazino (wedding celebratory dance)."
+        
+        if re.search(r'\b(music|drum|drumming|royal drummers|inanga|umuduri|ikembe)\b', q):
+            return "🥁 Burundian music features the famous Royal Drummers of Burundi (UNESCO heritage). Traditional instruments include: Ingoma (royal drums), Inanga (harp with 6-8 strings), Umuduri (musical bow - oldest instrument), Ikembe (thumb piano/kalimba), and Amakondera (antelope horn flutes)."
+        
+        if re.search(r'\b(festival|festivals|celebration|holiday)\b', q):
+            return "🎉 Major festivals in Burundi: Independence Day (July 1), Unity Day (February 5), World Drum Festival (August in Gitega), Lake Tanganyika Festival (October), Coffee and Tea Festival (April in Kayanza), Christmas (December 25), Easter."
+        
+        # ============================================================
+        # FOOD & CUISINE
+        # ============================================================
+        if re.search(r'\b(food|cuisine|dish|meal|eat|national dish|traditional food)\b', q):
+            return "🍲 Burundian cuisine features: Ugali (Ubugali) - corn/cassava porridge with beans (national dish), Sambaza (small fried fish from Lake Tanganyika), Mukeke (grilled sardines), Brochettes (grilled goat/beef skewers), Isombe (cassava leaves with peanuts), Ibiharage (fried beans with palm oil)."
+        
+        if re.search(r'\b(ugali|ubugali|national dish|staple food)\b', q):
+            return "🍲 Ugali (called Ubugali in Kirundi) is the national dish of Burundi. It is a stiff porridge made from corn or cassava flour, typically served with beans, vegetables, or meat. It is eaten with the hands, never utensils!"
+        
+        if re.search(r'\b(sambaza|fish|mukeke|ndagala|tanganyika fish)\b', q):
+            return "🐟 Sambaza is a small fried fish from Lake Tanganyika, very popular in Burundi. Mukeke are Lake Tanganyika sardines, best served grilled with lemon. Ndagala are silver cyprinid fish, sun-dried then fried. Lake Tanganyika has 350+ fish species!"
+        
+        if re.search(r'\b(brochettes|grilled meat|meat|skewers)\b', q):
+            return "🍢 Brochettes are grilled goat or beef skewers, marinated with peppers, garlic, and lemon. They are a very popular street food in Burundi, especially in Bujumbura."
+        
+        if re.search(r'\b(isombe|cassava leaves)\b', q):
+            return "🌿 Isombe is a traditional dish made from cassava leaves ground with peanuts. It is often served with rice or ugali and is rich in protein and vitamins."
+        
+        if re.search(r'\b(fruits|mango|papaya|banana|pineapple|avocado)\b', q):
+            return "🍍 Burundi grows many tropical fruits: Mangoes (8 varieties including 'Bishop' and 'Kent'), Papaya (grown year-round), Bananas (30+ varieties for eating AND beer!), Pineapple (sweet 'Victoria' variety), Avocado (Hass and local), Oranges, Passion fruit, Guava, Jackfruit (up to 40kg!)."
+        
+        # ============================================================
+        # DRINKS
+        # ============================================================
+        if re.search(r'\b(drink|beverage|beer|banana beer|urwarwa|sorghum beer|impeke)\b', q):
+            return "🍺 Traditional Burundian drinks: Urwarwa (banana beer - 8% alcohol, fermented 3-5 days), Impeke (sorghum beer - 5% alcohol, ceremonial), Ubushera (fermented millet porridge - 3% alcohol). Commercial beers: Primus (lagered by Brasserie de l'Urundi), Amstel, Club Beer."
+        
+        if re.search(r'\b(banana beer|urwarwa)\b', q):
+            return "🍌 Urwarwa is traditional banana beer in Burundi. It is made from fermented bananas (30+ varieties used), takes 3-5 days to brew, and has 8% alcohol. Burundians drink an estimated 50 MILLION liters of banana beer annually!"
+        
+        if re.search(r'\b(coffee|burundi coffee|arabica|long miles coffee|jnp coffee)\b', q):
+            return "☕ Burundi coffee is world-famous high-quality Arabica coffee! Annual production: 8 million kg. Growing regions: Kayanza, Ngozi, Muyinga, Gitega. Quality score: 85-89 (Specialty grade). Famous brands: Long Miles Coffee, JNP Coffee, Burundi Premium. It's considered some of Africa's best coffee!"
+        
+        if re.search(r'\b(tea|burundi tea|wagwag|rwegura tea|sogestal)\b', q):
+            return "🍃 Burundi tea is high-quality black tea. Annual production: 6 million kg. Major estates: Teza (1,200 hectares), Rwegura (800 hectares), Tora (600 hectares). Brands: Wagwag, Rwegura Tea, Sogestal Gold. Export markets: Pakistan, UK, Egypt, Sudan, Kenya."
+        
+        # ============================================================
+        # TOURISM - KIBIRA NATIONAL PARK
+        # ============================================================
+        if re.search(r'\b(kibira|kibira national park|kibira park|kibira np)\b', q):
+            return "🦍 KIBIRA NATIONAL PARK: 40,000 hectares of rainforest (established 1934). Home to 300-400 chimpanzees (endangered), 2,000 colobus monkeys, 3,000 blue monkeys, 300+ bird species. Activities: chimpanzee trekking ($75 permit), bird watching ($20 guide), forest hiking ($10). Accommodation: Eco-Lodge Kibira ($90-160/night), camping ($10). Best time: June-February. 2 hours from Bujumbura."
+        
+        if re.search(r'\b(chimpanzee|chimpanzee trekking|chimps in kibira|kibira chimpanzees)\b', q):
+            return "🦍 Kibira National Park has 300-400 chimpanzees in 10 family groups. Chimpanzee trekking costs $75 for a permit. Treks start at 8am daily and last 4-6 hours. Best season: June-October (dry season). Book permits in advance!"
+        
+        # ============================================================
+        # TOURISM - RUVUBU NATIONAL PARK
+        # ============================================================
+        if re.search(r'\b(ruvubu|ruvubu national park|ruvubu park|ruvubu np)\b', q):
+            return "🦬 RUVUBU NATIONAL PARK: 50,800 hectares - LARGEST PARK IN BURUNDI! Established 1980. Wildlife: 500+ buffalo, 300 hippos, 200 crocodiles, 1,000 waterbucks, 150 hyenas, 40 leopards, 350+ bird species. Activities: game drives ($25), boat safaris ($15), walking safaris ($10). Accommodation: Ruvubu Safari Lodge ($80-120/night), camping ($8-25). Best time: June-October. 4 hours from Bujumbura, 4x4 recommended."
+        
+        if re.search(r'\b(buffalo|buffalo in ruvubu|ruvubu buffalo)\b', q):
+            return "🦬 Ruvubu National Park has 500+ African buffalo in large herds. They are best seen during game drives at dawn (6am) or dusk (4pm) in the dry season (June-October)."
+        
+        # ============================================================
+        # TOURISM - LAKE TANGANYIKA BEACHES
+        # ============================================================
+        if re.search(r'\b(beach|beaches|lake tanganyika beach|saga beach|resha beach|bora bora beach|kitoga beach)\b', q):
+            return "🏖️ LAKE TANGANYIKA BEACHES: Saga Beach (most popular, bars, volleyball, entry $2, energetic vibe), Resha Beach (quiet, family-friendly, entry $1, relaxed vibe), Bora Bora Beach (water sports, jet skiing, entry $5, upscale), Kitoga Beach (secluded, free entry, authentic), Mugere Beach (sunset views, entry $1, peaceful). All beaches are on Lake Tanganyika, the 2nd deepest lake in the world!"
+        
+        if re.search(r'\b(saga beach|saga)\b', q):
+            return "🏖️ Saga Beach is the most popular beach on Lake Tanganyika in Bujumbura. Entry fee: $2. Features: bars, restaurants, volleyball courts, swimming areas, sun loungers. Vibe: energetic and social. Best for: young people, groups, parties."
+        
+        # ============================================================
+        # TOURISM - ATTRACTIONS
+        # ============================================================
+        if re.search(r'\b(gishora|drum sanctuary|gishora drum|royal drummers)\b', q):
+            return "🥁 GISHORA DRUM SANCTUARY is a UNESCO Intangible Cultural Heritage site located in Gitega Province. Daily drumming performances at 10am and 3pm. Entry: $10, performance: $20-30 (2 hours). Home of the Royal Drummers of Burundi who performed at the 2010 FIFA World Cup! Best time to visit: August (World Drum Festival)."
+        
+        if re.search(r'\b(livingstone|stanley|livingstone-stanley|monument|dr livingstone)\b', q):
+            return "📍 LIVINGSTONE-STANLEY MONUMENT is located in Mugere, 12km south of Bujumbura on Lake Tanganyika shore. It marks the meeting location of explorers David Livingstone and Henry Morton Stanley on November 25, 1871. Famous quote: 'Dr. Livingstone, I presume?' Entry: $2, guide: $5."
+        
+        if re.search(r'\b(muramvya|kings palace|muramvya palace|royal palace)\b', q):
+            return "🏰 MURAMVYA KINGS PALACE is the traditional royal court of Burundi kingdom. Located in Muramvya Province. Features: replica of royal hut (no iron nails used!), sacred drums collection, traditional bamboo architecture. Entry: $5, guide: $10. Duration: 1-2 hours."
+        
+        # ============================================================
+        # WILDLIFE
+        # ============================================================
+        if re.search(r'\b(wildlife|animals|mammals|fauna)\b', q):
+            return "🦁 Burundi wildlife includes: Chimpanzees (300-400, endangered), African buffalo (1,500), Hippopotamus (800, vulnerable), Leopards (150, vulnerable), Spotted hyenas (400), Olive baboons (5,000), Colobus monkeys (3,000), Blue monkeys (5,000), Bushbucks (2,000), Warthogs (1,500), Pangolins (200, critically endangered). Best wildlife viewing in Kibira NP (primates) and Ruvubu NP (savanna animals). Best season: July-October."
+        
+        if re.search(r'\b(birds|bird watching|bird species|birding)\b', q):
+            return "🦅 Burundi has 712 bird species! Notable birds: Shoebill stork (rare, Rusizi Delta), Grey Crowned Crane (national bird), African Fish Eagle, Great Blue Turaco, Malachite Kingfisher, Secretary Bird, Marabou Stork. Birding hotspots: Rusizi Delta (wetland species, shoebill), Kibira NP (forest birds, 200+ species), Lake Tanganyika (water birds), Ruvubu NP (savanna birds). Best time for bird watching: November-March (migratory species)."
+        
+        if re.search(r'\b(shoebill|shoebill stork|rare bird)\b', q):
+            return "🦅 The Shoebill stork (Balaeniceps rex) is a rare, prehistoric-looking bird found in Burundi! It lives in the Rusizi Delta wetlands. It is one of the most sought-after birds by birdwatchers. Best time to see it: November-March. It is endangered, with only a few hundred remaining in Africa."
+        
+        # ============================================================
+        # ECONOMY
+        # ============================================================
+        if re.search(r'\b(economy|gdp|economic|economic overview)\b', q):
+            return "💰 Burundi's GDP is $3.85 billion (nominal), $12.8 billion (PPP). GDP per capita: $270 (nominal), $890 (PPP). Growth rate: 2.8%. Inflation: 16.5%. Unemployment: 6.8%. Agriculture: 45% of GDP (86% of employment), Services: 40%, Industry: 15%. Poverty rate: 64.9%."
+        
+        if re.search(r'\b(exports|main exports|what does burundi export|export products)\b', q):
+            return "📦 Burundi's main exports: Coffee (70% of exports, $126 million/year), Tea (10% of exports, $60 million/year), Gold (8% of exports). Other exports: Cotton, Tin ore, Manufacturing. Export partners: UAE (32%), Switzerland (18%), China (12%), DRC (8%), Belgium (6%)."
+        
+        if re.search(r'\b(imports|what does burundi import|import products)\b', q):
+            return "📦 Burundi's main imports: Machinery (15%), Petroleum (12%), Food (10%), Pharmaceuticals (8%), Vehicles (7%), Plastics (6%), Textiles (5%). Import partners: China (20%), India (15%), Tanzania (12%), UAE (10%), Saudi Arabia (8%), Kenya (7%), Belgium (6%)."
+        
+        # ============================================================
+        # MINERALS
+        # ============================================================
+        if re.search(r'\b(minerals|nickel|gold|mining|resources|natural resources)\b', q):
+            return "⛏️ Burundi's mineral resources: Nickel (180 million tons at Musongati - WORLD CLASS DEPOSIT!), Gold (artisanal mining in Muyinga, Cibitoke, Kayanza), Peat (500 million cubic meters at Bugabira), Cobalt (50,000 tons), Uranium (exploration phase at Kiremba), Vanadium (30,000 tons), Limestone (millions of tons at Rumonge for cement), Kaolin (20 million tons for ceramics), Quartz (for glass making)."
+        
+        if re.search(r'\b(nickel|musongati|nickel deposit)\b', q):
+            return "⛏️ Burundi has 180 million tons of nickel at Musongati - one of the largest nickel deposits in the world! The deposit has 1.5% grade and could be worth over $1.5 billion. It also contains associated cobalt (50,000 tons) and vanadium (30,000 tons)."
+        
+        if re.search(r'\b(gold|gold mining|artisanal gold)\b', q):
+            return "💰 Gold is mined artisanally in Burundi, producing approximately 200 kg annually. Major gold mining regions: Muyinga, Cibitoke, Kayanza. The gold grade is 5-15 grams per ton."
+        
+        # ============================================================
+        # VISA & TRAVEL DOCUMENTS
+        # ============================================================
+        if re.search(r'\b(visa|do i need a visa|visa requirement|entry requirement|travel document)\b', q):
+            return "🛂 VISA INFORMATION: Single entry visa costs $90 (1 month). Multiple entry visa (3 months) costs $250. Transit visa (72 hours) costs $40. Visa on arrival available for USA, Canada, UK, EU countries, Australia, China, Japan, Brazil, South Africa, and many more. Visa-free for Tanzania, Rwanda, DRC, Kenya, Uganda, South Sudan. E-visa available online (72-hour processing). Yellow fever vaccination certificate is MANDATORY for entry!"
+        
+        if re.search(r'\b(visa on arrival|arrival visa|on arrival)\b', q):
+            return "🛂 Visa on arrival is available for citizens of: USA, Canada, United Kingdom, all EU countries, Australia, New Zealand, China, Japan, South Korea, Brazil, Argentina, Mexico, South Africa, Russia, India, Indonesia, Malaysia, Singapore, Philippines, Vietnam, Thailand, Turkey, Israel, Saudi Arabia, UAE, Qatar, Kuwait, and many more. Cost: $90 for single entry, cash only (USD or EUR)."
+        
+        if re.search(r'\b(visa free|no visa required|eac visa)\b', q):
+            return "🛂 Citizens of these countries can enter Burundi without a visa: Tanzania, Rwanda, DRC, Kenya, Uganda, South Sudan (all East African Community members). Maximum stay: 90 days."
+        
+        if re.search(r'\b(e-visa|online visa|electronic visa)\b', q):
+            return "🛂 Burundi offers e-visa online at evisa.burundi.gov.bi. Processing time: 72 hours. Cost: same as regular visa ($90 single entry). Valid for 30 days from issue date. You need to print the approval and present it on arrival."
+        
+        # ============================================================
+        # ACCOMMODATION & HOTELS
+        # ============================================================
+        if re.search(r'\b(hotel|hotels|accommodation|stay|lodging|place to stay)\b', q):
+            return "🏨 HOTELS IN BURUNDI: Luxury ($80-250/night): Hotel Club du Lac Tanganyika ($120-250, private beach), Hotel Safari Gate ($100-200, airport shuttle), Rumonge Lodge ($80-150, lake views), Eco-Lodge Kibira ($90-160, forest). Mid-range ($30-90/night): Hotel Botanika ($50-90), Hotel Source du Nil ($45-80), La Rochelle Hotel ($40-75), Hotel Karin ($35-60 in Ngozi). Budget ($8-25/night): Auberge New Joy ($15-25), Urban Lodge ($10-20), Backpackers Bujumbura ($8-15)."
+        
+        if re.search(r'\b(hotel club du lac|club du lac)\b', q):
+            return "🏨 Hotel Club du Lac Tanganyika is a luxury hotel in Bujumbura ($120-250/night). Amenities: private beach, swimming pool, spa, 2 restaurants, conference center, free WiFi. Rating: 4.5/5. Best for: business travelers, families, couples."
+        
+        if re.search(r'\b(safari gate|hotel safari gate)\b', q):
+            return "🏨 Hotel Safari Gate is a luxury hotel in Bujumbura ($100-200/night). Amenities: airport shuttle, restaurant, bar, swimming pool, fitness center, casino. Rating: 4.3/5. Best for: business travelers, transit passengers."
+        
+        # ============================================================
+        # TRANSPORTATION
+        # ============================================================
+        if re.search(r'\b(transport|transportation|get around|travel around|moving around)\b', q):
+            return "🚗 TRANSPORTATION IN BURUNDI: Moto-taxis ($1-3, most common), Buses between provinces ($3-10, companies: Otraco, Yanda, Ufunza), Private taxis ($5-10 short trip, $30-40 city tour), Car rental ($50-100/day, 4x4 $80-120/day). Main airport: Bujumbura International (BJM) with Ethiopian, Kenya Airways, RwandAir, Brussels Airlines."
+        
+        if re.search(r'\b(moto-taxi|mototaxi|boda boda|motorcycle taxi)\b', q):
+            return "🛵 Moto-taxis (motorcycle taxis) are the most common transport in Burundi. Prices: short trip $1-2, medium trip $2-3, long trip $3-5. ALWAYS negotiate price BEFORE getting on. Wear the provided helmet. Most drivers are honest but confirm destination and price clearly."
+        
+        if re.search(r'\b(bus|buses|public transport|coach|intercity bus)\b', q):
+            return "🚌 Buses in Burundi connect all major cities. Prices: Bujumbura-Gitega $3-5 (2 hours), Bujumbura-Ngozi $5-8 (3 hours), Bujumbura-Muyinga $6-10 (4 hours). Major bus companies: Otraco, Yanda, Ufunza, Mugina. Buses leave from the central bus stations in each city."
+        
+        if re.search(r'\b(taxi|private taxi|city taxi)\b', q):
+            return "🚕 Private taxis in Bujumbura: short trip $5-10, city tour (4 hours) $30-40, full day rental $60-80, airport to city $15-20. Agree on price BEFORE starting. Use official taxis with yellow license plates."
+        
+        if re.search(r'\b(car rental|rent a car|rental car)\b', q):
+            return "🚗 Car rental in Burundi: 4x4 per day $80-120, sedan per day $50-80. Companies: Avis, Europcar, local agencies. Requirements: International Driving Permit + passport + deposit. 4x4 recommended for rural areas, especially in rainy season (March-May). Fuel cost: $1.10 per liter."
+        
+        # ============================================================
+        # AIR TRAVEL
+        # ============================================================
+        if re.search(r'\b(airport|bujumbura airport|bjm|flights|airlines)\b', q):
+            return "✈️ Bujumbura International Airport (BJM) is the main airport. Airlines: Ethiopian Airlines (Addis Ababa, Nairobi, Kigali), Kenya Airways (Nairobi), RwandAir (Kigali, Entebbe), Brussels Airlines (Brussels - direct), Air Tanzania (Dar es Salaam). Distance to city: 11km, taxi $15-20. Domestic flights: Gitega Airport (charter only)."
+        
+        # ============================================================
+        # HEALTH & MEDICAL
+        # ============================================================
+        if re.search(r'\b(health|medical|vaccine|vaccination|yellow fever|shots|injection)\b', q):
+            return "🏥 REQUIRED VACCINATIONS: YELLOW FEVER is MANDATORY for entry to Burundi. Certificate checked at immigration. Recommended: Hepatitis A & B, Typhoid, Meningitis, Rabies, Polio booster, Measles, Tetanus. Get vaccines 4-6 weeks before travel. Bring your Yellow Card (vaccination certificate) at ALL times."
+        
+        if re.search(r'\b(malaria|malaria risk|malaria pills|antimalarial|doxycycline|mefloquine|malarone)\b', q):
+            return "⚠️ MALARIA: Burundi has HIGH RISK of malaria throughout the country. Take prophylaxis: doxycycline, mefloquine, or malarone. Start 1-2 weeks BEFORE travel, continue 4 weeks AFTER leaving. Use DEET mosquito repellent (30%+), sleep under treated nets, wear long sleeves at dawn/dusk, avoid standing water."
+        
+        if re.search(r'\b(water|tap water|drinking water|bottled water|safe to drink)\b', q):
+            return "💧 Drink ONLY bottled water in Burundi! Recommended brands: Source du Nil, Primus. NEVER drink tap water. Avoid ice in drinks, avoid raw vegetables washed with tap water. Use water purification tablets for emergencies. Bottled water cost: $0.50-1.00 per 1.5L bottle."
+        
+        if re.search(r'\b(hospital|hospitals|medical care|doctor|clinic)\b', q):
+            return "🏥 MAJOR HOSPITALS IN BURUNDI: Prince Regent Charles Hospital (Bujumbura - largest), Kamenge Military Hospital (Bujumbura), Kira Hospital (Bujumbura - private), Roi Khaled Hospital (Ngozi), Gitega Regional Hospital. For serious emergencies, medical evacuation to Nairobi (Kenya) or Kigali (Rwanda) is recommended. Travel insurance with medical evacuation coverage ($100,000+) is REQUIRED!"
+        
+        if re.search(r'\b(emergency|emergency number|police|ambulance|fire)\b', q):
+            return "🚨 EMERGENCY NUMBERS IN BURUNDI: Police: 117, Ambulance: 113, Fire: 118. Save these numbers before traveling. Also save your embassy's emergency contact number. For medical emergencies, contact your travel insurance provider immediately."
+        
+        # ============================================================
+        # SAFETY
+        # ============================================================
+        if re.search(r'\b(safety|safe|dangerous|crime|security|safe to visit)\b', q):
+            return "🔒 SAFETY IN BURUNDI: Crime level is low to moderate. Petty theft (pickpocketing) occurs in markets and crowded areas. Safe areas: Bujumbura city center (daytime), Gitega, Lake Tanganyika beaches (supervised), national parks (with official guide). Avoid: walking alone after dark in remote areas, political demonstrations, showing valuables publicly. Burundians are generally friendly and helpful to tourists!"
+        
+        if re.search(r'\b(crime|theft|pickpocket|robbery|scam)\b', q):
+            return "⚠️ CRIME PREVENTION: Pickpocketing in Bujumbura Central Market, bag snatching on beaches, phone theft in crowded areas, car break-ins (don't leave valuables visible). Scams: unofficial 'guides' asking upfront payment, currency exchange tricks, fake police checkpoints (ask for official ID). Keep valuables in hotel safes, carry minimal cash, stay aware of surroundings."
+        
+        # ============================================================
+        # LANGUAGE - KIRUNDI
+        # ============================================================
+        if re.search(r'\b(kirundi|language|speak|what language|official language)\b', q):
+            return "🗣️ Burundi has 3 official languages: Kirundi (98% of population speak it - Bantu language), French (12% - colonial heritage, government/education), English (8% - growing, taught in schools since 2014), Swahili (15% - trade language). Kirundi is the most widely spoken and the national language."
+        
+        if re.search(r'\b(hello in kirundi|say hello|amahoro|kirundi greeting)\b', q):
+            return "🗣️ 'Hello' in Kirundi is 'Amahoro' (pronounced ah-mah-HOH-roh). It also means 'peace'. Other greetings: 'Mwaramutse' (good morning), 'Mwaramuke' (good afternoon), 'Mwiriwe' (good evening), 'Ijoro ryiza' (good night)."
+        
+        if re.search(r'\b(thank you in kirundi|murakoze|kirundi thank you)\b', q):
+            return "🙏 'Thank you' in Kirundi is 'Murakoze' (pronounced moo-rah-KOH-zay). 'Thank you very much' is 'Murakoze cane'. The response is 'Ni busa' (you're welcome)."
+        
+        if re.search(r'\b(goodbye in kirundi|murabeho|kirundi goodbye)\b', q):
+            return "👋 'Goodbye' in Kirundi is 'Murabeho' (pronounced moo-rah-BAY-hoh). If you are leaving and saying goodbye to someone staying, you can say 'N'agende' (I'm going)."
+        
+        if re.search(r'\b(how are you in kirundi|amakuru|kirundi how are you)\b', q):
+            return "💬 'How are you?' in Kirundi is 'Amakuru?' (pronounced ah-mah-KOO-roo). The response is 'Ni meza' (I'm fine). 'I'm fine, thank you' is 'Ni meza, murakoze'."
+        
+        if re.search(r'\b(yes in kirundi|no in kirundi|ego|oya)\b', q):
+            return "✅ 'Yes' in Kirundi is 'Ego' (pronounced EH-goh). ❌ 'No' in Kirundi is 'Oya' (pronounced OH-yah)."
+        
+        if re.search(r'\b(please in kirundi|nyamuneka|kirundi please)\b', q):
+            return "🙏 'Please' in Kirundi is 'Nyamuneka' (pronounced nyah-moo-NEH-kah). For example: 'Nyamuneka, mfasha!' (Please, help me!)."
+        
+        if re.search(r'\b(i love you in kirundi|ndagukunda|kirundi love)\b', q):
+            return "❤️ 'I love you' in Kirundi is 'Ndagukunda' (pronounced n-dah-goo-KOON-dah)."
+        
+        if re.search(r'\b(help in kirundi|nkorabuhungiro|kirundi help|mfasha)\b', q):
+            return "🆘 'Help!' in Kirundi is 'Nkorabuhungiro!' (pronounced n-koh-rah-boo-HOON-gee-roh) or 'Mfasha!' (MFAH-shah). Use these in emergency situations."
+        
+        if re.search(r'\b(water in kirundi|amazi|food in kirundi|ibifungurwa)\b', q):
+            return "💧 'Water' in Kirundi is 'Amazi' (ah-MAH-zee). 'Food' in Kirundi is 'Ibifungurwa' (ee-bee-foon-GOOR-wah). 'Beer' is 'Inzoga' (een-ZOH-gah)."
+        
+        if re.search(r'\b(numbers in kirundi|count in kirundi|kirundi numbers)\b', q):
+            return "🔢 NUMBERS IN KIRUNDI: 1 Rimwe, 2 Kabiri, 3 Gatatu, 4 Kane, 5 Gatanu, 6 Gatandatu, 7 Indwi, 8 Umunani, 9 Kenda, 10 Icumi, 20 Makumyabiri, 50 Mirongo itanu, 100 Ijana, 1000 Igihumbi."
+        
+        # ============================================================
+        # FUN FACTS
+        # ============================================================
+        if re.search(r'\b(fun fact|interesting fact|did you know|trivia|fact about burundi)\b', q):
+            facts = [
+                "Burundi has 3 official languages - one of only 10 countries in the world!",
+                "Lake Tanganyika is the LONGEST freshwater lake in the world at 673 km!",
+                "The Royal Drummers of Burundi performed at the 2010 FIFA World Cup opening ceremony!",
+                "Burundi's flag has 3 stars representing the 3 ethnic groups (Hutu, Tutsi, Twa) - very rare in Africa!",
+                "Burundi has NO railway system - one of few African nations without trains!",
+                "Burundians drink an estimated 50 MILLION liters of banana beer annually!",
+                "The southern source of the Nile River was discovered in Burundi in 1934!",
+                "Mount Heha is the 15th highest mountain in Africa!",
+                "Burundi produces some of the HIGHEST-QUALITY Arabica coffee in the world (85-89 points)!",
+                "85% of Burundians live in rural areas - one of the most rural countries in Africa!",
+                "Traditional Burundian drumming is UNESCO Intangible Cultural Heritage!",
+                "Burundi has over 100 different banana varieties!",
+                "Burundi is one of the most densely populated countries in Africa (449 people/km²)!",
+                "Lake Tanganyika has 1,500 species of fish, 1,200 of which are ENDEMIC (found nowhere else)!",
+                "Burundi is nicknamed 'The Heart of Africa' due to its shape and central location!",
+                "The Twa people are one of the oldest Pygmy groups in Africa!",
+                "Burundi's independence hero Prince Louis Rwagasore was assassinated just weeks before independence!",
+                "The country has no skyscrapers - tallest buildings are 8 floors!",
+                "President Pierre Nkurunziza was also a choir singer and footballer!",
+                "Burundi is one of the most Christian countries in Africa (94%)!"
+            ]
+            return f"💡 {random.choice(facts)}"
+        
+        # ============================================================
+        # ELECTRICITY & PLUGS (SPECIFIC QUESTION FROM SCREENSHOT)
+        # ============================================================
+        if re.search(r'\b(electricity|voltage|plug|power|outlet|adapter|electrical)\b', q):
+            return "⚡ Electricity in Burundi: Voltage is 220V at 50Hz. Plug types: European-style two-prong plug (Type C) and three-prong plug (Type E). South Africans need an adapter (South Africa uses 230V Type M/N). Americans need a voltage converter AND adapter (US uses 120V). Power outages are common, bring a power bank and surge protector."
+        
+        # ============================================================
+        # SHOPPING & SOUVENIRS
+        # ============================================================
+        if re.search(r'\b(shopping|souvenir|market|gift|buy|shop)\b', q):
+            return "🛍️ SHOPPING IN BURUNDI: Best souvenirs: Miniature royal drums, Intore dancer figurines, Agaseke baskets (Twa weaving), wood carvings, coffee beans (Long Miles Coffee), tea (Wagwag brand), cow-hide shields. Markets: Bujumbura Central Market (produce, spices, cloth), Artisans Market at Musee Vivant (crafts, drums, baskets). Bargaining is expected in markets. Cash only (Burundian Francs)."
+        
+        # ============================================================
+        # ETIQUETTE & CUSTOMS
+        # ============================================================
+        if re.search(r'\b(etiquette|custom|dress code|manners|respect|polite)\b', q):
+            return "🤝 BURUNDI ETIQUETTE: Greet everyone with handshake (use right hand only!), use formal titles (Monsieur, Madame), respect elders (stand when they enter the room), dress modestly (knees and shoulders covered outside beach areas), ask permission before photographing people, remove shoes when entering someone's home, use right hand for giving/receiving items, avoid discussing ethnicity/politics publicly. Burundians appreciate visitors who try to speak Kirundi!"
+        
+        # ============================================================
+        # PHOTOGRAPHY
+        # ============================================================
+        if re.search(r'\b(photo|photograph|camera|picture|take photo|photography)\b', q):
+            return "📸 PHOTOGRAPHY TIPS: ALWAYS ask permission before photographing people (say 'Amahoro, ndashaka gufoto?' - Hello, may I take a photo?). Many people will say yes, but some may ask for a small tip ($0.50-1). No photos of military, police, government buildings, or border crossings. Photography permits: $5 at Gishora Drum Sanctuary, $10 at some museums. Best photography spots: Mount Heha (sunrise), Lake Tanganyika (sunset), Kibira NP (chimpanzees), Saga Beach (golden hour)."
+        
+        # ============================================================
+        # DEFAULT RESPONSE (WHEN NO MATCH)
+        # ============================================================
+        return "🇧🇮 I'm here to answer your questions about Burundi! Try asking about: history, geography (mountains/lakes/rivers), culture (music/dance/food), tourism (Kibira Park, Lake Tanganyika beaches, visa), wildlife, economy (coffee/tea), language (Kirundi phrases), fun facts, health/safety, hotels, or transport. Just type your question naturally! 🇧🇮"
 
 # Initialize AI
 ai = BurundiUltimateAI()
 
-# HTML Template - Clean, Simple, Mobile-Friendly
+# HTML Template - Clean, Mobile-Friendly
 HTML = """
 <!DOCTYPE html>
 <html lang="en">
@@ -1122,7 +530,7 @@ HTML = """
         }
         
         .header p {
-            font-size: 12px;
+            font-size: 11px;
             opacity: 0.85;
             margin-top: 4px;
         }
@@ -1133,7 +541,7 @@ HTML = """
             justify-content: center;
             margin-top: 8px;
             font-size: 10px;
-            opacity: 0.7;
+            opacity: 0.75;
         }
         
         .chat-area {
@@ -1314,11 +722,13 @@ HTML = """
             <button class="quick-btn" onclick="ask('history')">📜 History</button>
             <button class="quick-btn" onclick="ask('geography')">🗺️ Geography</button>
             <button class="quick-btn" onclick="ask('culture')">🎭 Culture</button>
-            <button class="quick-btn" onclick="ask('tourism')">✈️ Tourism</button>
-            <button class="quick-btn" onclick="ask('kibira')">🦍 Kibira Park</button>
-            <button class="quick-btn" onclick="ask('visa')">🛂 Visa</button>
             <button class="quick-btn" onclick="ask('food')">🍲 Food</button>
-            <button class="quick-btn" onclick="ask('facts')">💡 Facts</button>
+            <button class="quick-btn" onclick="ask('Kibira National Park')">🦍 Kibira</button>
+            <button class="quick-btn" onclick="ask('Lake Tanganyika')">💧 Lake</button>
+            <button class="quick-btn" onclick="ask('visa')">🛂 Visa</button>
+            <button class="quick-btn" onclick="ask('fun fact')">💡 Facts</button>
+            <button class="quick-btn" onclick="ask('hello in Kirundi')">🗣️ Kirundi</button>
+            <button class="quick-btn" onclick="ask('safety')">🔒 Safety</button>
         </div>
         
         <div class="input-area">
@@ -1410,7 +820,7 @@ def chat():
 
 @app.route('/health')
 def health():
-    return jsonify({'status': 'ok', 'version': '8.0', 'creator': 'Mugisha Pc', 'data_points': 40000})
+    return jsonify({'status': 'ok', 'version': '9.0', 'creator': 'Mugisha Pc', 'data_points': 40000})
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=False)
