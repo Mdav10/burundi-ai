@@ -504,7 +504,7 @@ class MbanzaAIComplete:
             self.all_answers.update(category)
         
         self.total_answers = len(self.all_answers)
-        print(f"✅ MBANZA AI v13.0 READY: {self.total_answers} specific answers loaded")
+        print(f"✅ MBANZA AI  READY: {self.total_answers} specific answers loaded")
     
     def find_answer(self, question):
         """Find the BEST answer for ANY question"""
@@ -791,14 +791,9 @@ HTML_TEMPLATE = """
         <div class="message bot-message">
             <div class="message-bubble">
                 <strong>🇧🇮 Welcome to Mbanza AI!</strong><br><br>
-                I am your COMPLETE Burundi travel assistant with <strong>{{ total_answers }}+ specific answers</strong> to EVERY question tourists ask.<br><br>
-                Ask me ANYTHING, just like talking to a friend:<br>
-                • "Where can I find a place to sleep in Bujumbura?" 🏨<br>
-                • "Is it safe to walk alone at night?" 🔒<br>
-                • "What's the best food to try?" 🍲<br>
-                • "How do I get to Kibira National Park?" 🚗<br>
-                • "Do I need a yellow fever vaccine?" 💉<br><br>
-                <strong>I speak English and French. What would you like to know about Burundi? 🇧🇮</strong>
+                I am your Complete Burundi travel assistant Created by Mugisha pc!<strong>{{ total_answers }}+ specific answers</strong> <br><br>
+                <br>
+            <strong>🇧🇮</strong>
             </div>
         </div>
     </div>
@@ -815,7 +810,7 @@ HTML_TEMPLATE = """
     </div>
     <div class="input-area">
         <input type="text" id="messageInput" placeholder="Ask me anything about Burundi..." onkeypress="if(event.key=='Enter') sendMessage()">
-        <button onclick="sendMessage()">Send 💬</button>
+        <button onclick="sendMessage()"> ➤ </button>
     </div>
 </div>
 <script>
